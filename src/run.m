@@ -15,14 +15,14 @@ preprocess_test_dataset;
 %% read train model
 D = dir([TRAIN_DIR, 'binarized/', '*.bmp']);
 images = {D.name};
-models = struct('label',{},'image',{});
+models = struct('label',{},'image',{},'feature',{});
 
 for i = 1:length(images)
     name = images{i};
     label = extractBefore(name, '.');
     img = imread([TRAIN_DIR, 'binarized/', name]);
     
-    models{end+1} = struct('label',label,'image',img);
+    models{end+1} = struct('label',label,'image',img,'feature',extract_feature(img));
 end
 
 model_count = length(models);
@@ -152,13 +152,11 @@ for i = 1:length(images)
             model = models{m};
             [model_h, model_w] = size(model.image);
             
-            H = max(seg_h, model_h);
-            W = max(seg_w, model_w);
+            seg_img = img(seg.row_range,seg.col_range);
+            seg_feature = extract_feature(seg_img);
+            model_feature = model.feature;
             
-            seg_img = imbinarize(imresize(dimg(seg.row_range,seg.col_range),[H W], 'nearest'));
-            model_img = imbinarize(imresize(double(model.image),[H W],'nearest'));
-            
-            corr = match_corr(~seg_img, ~model_img);
+            corr = sum(seg_feature.*model_feature) / (norm(seg_feature)*norm(model_feature));
             
             if corr > max_corr
                 max_corr = corr;
