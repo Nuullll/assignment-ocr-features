@@ -1,12 +1,10 @@
-function [ corr_coef ] = match_corr( data, reference )
+function [ corr_coef ] = match_corr( vec1, vec2 )
 % return similarity coefficient
 
-norm_data = sqrt(sum(sum( data&data )));
-norm_ref = sqrt(sum(sum( reference&reference )));
+norm1 = norm(vec1);
+norm2 = norm(vec2);
 
-product = max(max(xcorr2(double(data),double(reference))));
-
-corr_coef = product / (norm_data*norm_ref);
+corr_coef = sum(vec1.*vec2) / (norm1*norm2);
 
 end
 

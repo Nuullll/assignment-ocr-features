@@ -15,14 +15,22 @@ preprocess_test_dataset;
 %% read train model
 D = dir([TRAIN_DIR, 'binarized/', '*.bmp']);
 images = {D.name};
-models = struct('label',{},'image',{},'feature',{});
+models = struct('label',{},'image',{});
+extractor_list = {@colwise_hist, @rowwise_hist, @blockwise_counter};
 
 for i = 1:length(images)
     name = images{i};
     label = char(extractBefore(name, '.'));
     img = imread([TRAIN_DIR, 'binarized/', name]);
     
-    models{end+1} = struct('label',label,'image',img,'feature',extract_feature(img));
+    varargin = {};
+    for k = 1:length(extractor_list)
+        extractor = extractor_list{k};
+        feature = extract_feature(img, extractor);
+        varargin{end+1} = func2str(extractor);
+        varargin{end+1} = feature;
+    end
+    models{end+1} = struct('label',label,'image',img,varargin{:});
 end
 
 model_count = length(models);
@@ -153,10 +161,18 @@ for i = 1:length(images)
             [model_h, model_w] = size(model.image);
             
             seg_img = img(seg.row_range,seg.col_range);
-            seg_feature = extract_feature(seg_img);
-            model_feature = model.feature;
             
-            corr = sum(seg_feature.*model_feature) / (norm(seg_feature)*norm(model_feature));
+            seg_features = {};
+            model_features = {};
+            corrs = [];
+            for e = 1:length(extractor_list)
+                extractor = extractor_list{e};
+                seg_features{e} = extract_feature(seg_img, extractor);
+                model_features{e} = getfield(model,func2str(extractor));
+                corrs(e) = match_corr(seg_features{e},model_features{e});
+            end
+            
+            corr = prod(corrs);
             
             if corr > max_corr
                 max_corr = corr;

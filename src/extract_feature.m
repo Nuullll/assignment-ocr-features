@@ -1,7 +1,5 @@
-function [ feature ] = extract_feature( img )
+function [ feature, varargout ] = extract_feature( img, extract_fun )
 % Feature extractor
-
-extract_fun = @blockwise_counter;
 
 feature = extract_fun(img);
 
