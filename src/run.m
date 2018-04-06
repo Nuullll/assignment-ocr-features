@@ -16,7 +16,11 @@ preprocess_test_dataset;
 D = dir([TRAIN_DIR, 'binarized/', '*.bmp']);
 images = {D.name};
 models = struct('label',{},'image',{});
-extractor_list = {@colwise_hist, @rowwise_hist, @blockwise_counter};
+extractor_list = {
+    @colwise_hist;
+    @rowwise_hist;
+    @blockwise_counter;
+};
 
 for i = 1:length(images)
     name = images{i};
