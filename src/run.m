@@ -190,17 +190,8 @@ for i = 1:length(images)
             'color',color_map(char(label)-'0'+1,:));
         
     end
-    
-    figure(1);
-    subplot(6,2,i);
-    imshow(img);
-    hold on;
-    for k = 1:length(rectangles)
-        rectangle('Position',rectangles{k}.position, 'EdgeColor',rectangles{k}.color, 'LineWidth', 3);
-    end
-    title(ocr_str);
 
-    figure(2);
+    figure(1);
     subplot(6,2,i);
     imshow(img_orig);
     hold on;
