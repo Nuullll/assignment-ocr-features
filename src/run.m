@@ -19,7 +19,8 @@ models = struct('label',{},'image',{});
 extractor_list = {
     @colwise_hist;
     @rowwise_hist;
-    @blockwise_counter;
+    @noresize_blockwise_counter;
+    @noresize_blockwise_white_counter;
 };
 
 for i = 1:length(images)
@@ -171,7 +172,7 @@ for i = 1:length(images)
             corrs = [];
             for e = 1:length(extractor_list)
                 extractor = extractor_list{e};
-                seg_features{e} = extract_feature(seg_img, extractor);
+                seg_features{e} = extract_feature(seg_img,extractor);
                 model_features{e} = getfield(model,func2str(extractor));
                 corrs(e) = match_corr(seg_features{e},model_features{e});
             end
