@@ -25,4 +25,4 @@ extractor_list = {
 };
 ```
 
-* All feature extractor functions are save under [src/extractors/](src/extractors/).
+* All feature extractor functions are saved under [src/extractors/](src/extractors/).
