@@ -22,6 +22,7 @@ extractor_list = {
     @rowwise_hist;
     @noresize_blockwise_counter;
     @noresize_blockwise_white_counter;
+    @hog;
 };
 
 for i = 1:length(images)
