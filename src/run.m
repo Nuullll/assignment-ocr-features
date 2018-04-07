@@ -18,8 +18,6 @@ D = dir([TRAIN_DIR, 'binarized/', '*.bmp']);
 images = {D.name};
 models = struct('label',{},'image',{});
 extractor_list = {
-    @colwise_hist;
-    @rowwise_hist;
     @noresize_blockwise_counter;
     @noresize_blockwise_white_counter;
     @hog;
